@@ -1,4 +1,5 @@
 <?php
+
 require "vendor/autoload.php";
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -79,5 +80,16 @@ function must_extension(string $extension) {
         respond_error(500, "Extension " . $extension . " is not installed. This is fatal");
     }
 }
+function is_entrypoint($__FILE__) {
+    return basename($__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]);
+}
+
+function forbid_entrypoint($__FILE__) {
+    if (is_entrypoint($__FILE__)) {
+        respond_error(400, "invalid route");
+    }
+}
+
+forbid_entrypoint(__FILE__);
 
 ?>
