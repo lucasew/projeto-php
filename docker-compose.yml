@@ -1,0 +1,23 @@
+web:
+    image: webdevops/php-apache:7.4
+    ports:
+    - "80:80"
+    links:
+    - db
+    volumes:
+    - $PWD:/app
+    environment:
+        DB_DATABASE: "${MYSQL_DATABASE}"
+        DB_USER: "${MYSQL_USER}"
+        DB_PASSWD: "${MYSQL_PASSWORD}"
+        DB_HOST: "${MYSQL_HOST}"
+
+db:
+    image: mysql
+    ports:
+    - "3306:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+        MYSQL_DATABASE: "${MYSQL_DATABASE}"
+        MYSQL_USER: "${MYSQL_USER}"
+        MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
