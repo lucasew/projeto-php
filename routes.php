@@ -63,12 +63,15 @@ function exact_with_route_param(string $selected_route, string $handler_script) 
     require $handler_script;
 }
 
-use_route("/inspect", "routes/inspect.php");
+// healthcheck
 exact_route("/healthcheck", "routes/healthcheck.php");
-exact_route("/dbdemo", "routes/dbdemo.php");
 
-exact_with_route_param("/say/:word/", "routes/paramtest.php");
-exact_with_route_param("/say/:word/wednesday", "routes/paramtest.php");
+// demos
+exact_with_route_param("/demo/say/:word/", "routes/demo/say.php");
+exact_with_route_param("/demo/say/:word/wednesday", "routes/demo/say.php");
+exact_route("/demo/db", "routes/demo/db.php");
+use_route("/demo/inspect", "routes/demo/inspect.php");
+
 // fallback
 respond_error(404, "page not found");
 
