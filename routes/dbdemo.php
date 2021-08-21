@@ -1,5 +1,5 @@
 <?php
-require 'utils.php';
+forbid_entrypoint(__FILE__);
 
 log_httpd("Puxando db");
 getDatabase();

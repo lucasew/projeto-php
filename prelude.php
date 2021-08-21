@@ -15,7 +15,7 @@ function errorHandler($severity, $message, $filename, $lineno) {
         ]
     ]);
 }
-function exceptionHandler(Exception $e) {
+function exceptionHandler($e) {
     respond(500, [
         "exception" => [
             "message" => $e->getMessage(),
