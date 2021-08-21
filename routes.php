@@ -6,15 +6,27 @@ function is_empty_string(string $s) {
     return $s == "";
 }
 
-$input_data = array_merge_recursive($_GET, $_POST);
-define("ROUTE", parse_url($_SERVER["REQUEST_URI"])["path"]);
+$INPUT_DATA = array_merge_recursive($_GET, $_POST);
+$ROUTE = parse_url($_SERVER["REQUEST_URI"])["path"];
+
+/**
+ * bring required variables to scope then require the new file
+ */
+function execphp(string $script) {
+    global $INPUT_DATA, $ROUTE;
+    require $script;
+    // doesn't pass this part
+    die();
+}
 
 /**
  * create a route that matches anything starting with $base_route
  */
 function use_route(string $base_route, string $handler_script) {
-    if (str_starts_with(ROUTE, $base_route)) {
-        require $handler_script;
+    global $ROUTE;
+    if (str_starts_with($ROUTE, $base_route)) {
+        $ROUTE = substr($ROUTE, strlen($base_route));
+        execphp($handler_script);
     }
 }
 
@@ -22,8 +34,9 @@ function use_route(string $base_route, string $handler_script) {
  * create a route that matches exactly $selected_route
  */
 function exact_route(string $selected_route, string $handler_script) {
-    if (strcmp(ROUTE, $selected_route) == 0) {
-        require $handler_script;
+    global $ROUTE;
+    if (strcmp($ROUTE, $selected_route) == 0) {
+        execphp($handler_script);
     }
 }
 
@@ -32,7 +45,7 @@ function exact_route(string $selected_route, string $handler_script) {
  * and pass the route param with input_data
  */
 function exact_with_route_param(string $selected_route, string $handler_script) {
-    global $input_data;
+    global $INPUT_DATA, $ROUTE;
     $preprocess = function (string $raw_route) {
         $splitted = preg_split("/\//", $raw_route);
         $splitted = array_filter($splitted, function($v, $k) {
@@ -41,7 +54,7 @@ function exact_with_route_param(string $selected_route, string $handler_script) 
         return array_values($splitted);
     };
     $params_parts = $preprocess($selected_route);
-    $route_parts = $preprocess(ROUTE);
+    $route_parts = $preprocess($ROUTE);
     log_httpd(json_encode($params_parts));
     log_httpd(json_encode($route_parts));
 
@@ -59,8 +72,8 @@ function exact_with_route_param(string $selected_route, string $handler_script) 
     } else {
         return;
     }
-    $input_data = array_merge_recursive($input_data, $extra_params);
-    require $handler_script;
+    $INPUT_DATA = array_merge_recursive($INPUT_DATA, $extra_params);
+    execphp($handler_script);
 }
 
 // healthcheck
