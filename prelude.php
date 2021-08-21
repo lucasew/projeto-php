@@ -42,8 +42,49 @@ function getDatabase() {
     if ($db->connect_error) {
         respond_error(500, "failed to connect to database: " . $db->connect_error);
     }
-    log_httpd("mysql construct");
+    if (!$db->select_db($database)) {
+        db_report_failure();
+    };
     return $db;
+}
+
+function db_report_failure() {
+    $db = getDatabase();
+    throw new Exception("MySQL statement failure: " . $db->errno . " " . $db->error);
+}
+
+/**
+ * shorthand for the query bureaucracy, returns the mysql statement
+ * $query: your sql query
+ * $types: placeholder types, empty by default. See: https://www.php.net/manual/en/mysqli-stmt.bind-param.php
+ * $placeholders: the placeholder value
+ */
+function db_stmt(string $query, string $types = "", string ...$placeholders) {
+    $db = getDatabase();
+    $stmt = $db->prepare($query);
+    if (!$stmt) {
+        db_report_failure();
+    }
+    if ($types != "") {
+        $db->bind_param($types, ...$placeholders);
+    }
+    return $stmt;
+}
+
+function db_run(string $query) {
+    db_execute(db_stmt($query));
+}
+
+function db_execute($stmt) {
+    $result = $stmt->execute();
+    if (!$result) {
+        db_report_failure();
+    }
+}
+
+function db_get_result($stmt) {
+    db_execute($stmt);
+    return $stmt->get_result()->fetch_array();
 }
 
 // https://stackoverflow.com/questions/6079492/how-to-print-a-debug-log
@@ -91,5 +132,4 @@ function forbid_entrypoint($__FILE__) {
 }
 
 forbid_entrypoint(__FILE__);
-
 ?>
