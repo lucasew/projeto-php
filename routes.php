@@ -1,13 +1,6 @@
 <?php
 require "prelude.php";
 
-function is_get() {
-    return !empty($_GET);
-}
-
-function is_post() {
-    return !empty($_POST);
-}
 
 function is_empty_string(string $s) {
     return $s == "";
@@ -34,6 +27,10 @@ function exact_route(string $selected_route, string $handler_script) {
     }
 }
 
+/**
+ * create a route with route params, like /users/:user/info 
+ * and pass the route param with input_data
+ */
 function exact_with_route_param(string $selected_route, string $handler_script) {
     global $input_data;
     $preprocess = function (string $raw_route) {
@@ -47,9 +44,6 @@ function exact_with_route_param(string $selected_route, string $handler_script) 
     $route_parts = $preprocess(ROUTE);
     log_httpd(json_encode($params_parts));
     log_httpd(json_encode($route_parts));
-
-    // var_dump($params_parts);
-    // var_dump($route_parts);
 
     $extra_params = [];
     if (count($params_parts) == count($route_parts)) {
