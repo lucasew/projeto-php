@@ -160,15 +160,16 @@ function is_client_mobile() {
 }
 
 function pw_create($password) {
-    return password_hash($password, PASSWORD_DEFAULT)
+    return password_hash($password, PASSWORD_DEFAULT);
 }
 
 function pw_verify($username, $password) {
-    $hashed = db_get_result(db_stmt("select password from users where username = ?", "s", $username))
-    if (count($hashed) != 1) {
-        throw new Exception("usuário ou senha inválido");
+    $hashed = db_get_result(db_stmt("select password from users where username = ?", "s", $username));
+    if (is_null($hashed)) {
+        return false;
     }
-    $hashed = $hashed[1];
+    $hashed = $hashed[0];
+    log_httpd($hashed);
     return password_verify($password, $hashed);
 }
 

@@ -9,29 +9,48 @@ function is_empty_string(string $s) {
 $INPUT_DATA = array_merge_recursive($_GET, $_POST);
 $ROUTE = parse_url($_SERVER["REQUEST_URI"])["path"];
 
-$IS_LOGGED_IN = false;
-$USER = null;
-$IS_ADMIN = false;
+function user_get() {
+    global $INPUT_DATA;
+    $login_user = $INPUT_DATA["login_user"] ?? null;
+    $login_password = $INPUT_DATA["login_password"] ?? null;
 
-$login_user = $INPUT_DATA["login_user"];
-$login_password = $INPUT_DATA["login_password"];
-
-if (!is_null($login_user) && !is_null($login_password)) {
-    global $IS_LOGGED_IN, $USER, $IS_ADMIN;
-    if (pw_verify($login_user, $login_password)) {
-        $IS_LOGGED_IN = true;
-        $USER = $login_user;
-        $IS_ADMIN = db_get_result(db_stmt("select role from users where username = ?", "s", $USER))[0] == "ADMIN";
+    if (!is_null($login_user) && !is_null($login_password)) {
+        if (pw_verify($login_user, $login_password)) {
+            ["uid" => $uid, "role" => $role] = db_get_result(db_stmt(
+                "select uid, role from users where username = ?", "s", "$login_user"
+            ));
+            return [
+                "uid" => $uid,
+                "is_admin" => $role == "ADMIN",
+                "username" => $login_user
+            ];
+        } else {
+            respond_error(401, "invalid authentication");
+        }
     }
+    return null;
 }
 
+function user_must_authenticated() {
+    $user = user_get();
+    if (is_null($user)) {
+        respond_error(401, "unauthorized");
+    }
+    return $user;
+}
+
+function user_must_admin() {
+    $user = user_get();
+    if (is_null($user) || !$user["is_admin"]) {
+        respond_error(401, "unauthorized");
+    }
+}
 
 /**
  * bring required variables to scope then require the new file
  */
 function execphp(string $script) {
     global $INPUT_DATA, $ROUTE;
-    global $IS_LOGGED_IN, $USER, $IS_ADMIN;
     require $script;
     // doesn't pass this part
     die();
@@ -107,6 +126,7 @@ use_route("/api/demo/inspect", "routes/api/demo/inspect.php");
 // business logic
 exact_route("/api/admin/db_bootstrap", "routes/api/admin/db_bootstrap.php");
 exact_route("/api/user/signup", "routes/api/user/signup.php");
+exact_route("/api/user/whoami", "routes/api/user/whoami.php");
 
 // fallback
 respond_error(404, "page not found");
