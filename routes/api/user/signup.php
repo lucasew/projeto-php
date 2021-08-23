@@ -9,7 +9,7 @@ db_execute(db_stmt(
     pw_create($password)
 ));
 respond_sucess([
-    "user_id" => db_get_result(db_stmt("SELECT LAST_INSERT_ID()"))[0],
+    "uid" => db_get_last_inserted_id(),
     "user_name" => $user
 ]);
 ?>

@@ -108,6 +108,40 @@ function db_get_result($stmt) {
     return $result->fetch_array();
 }
 
+function db_get_all_result($stmt, $mode = MYSQLI_BOTH, $limit = 0) {
+    db_execute($stmt);
+    $result = $stmt->get_result();
+    if (!$result) {
+        db_report_failure($stmt);
+    }
+    if ($limit == 0) {
+        $ret = [];
+        $i = 0;
+        $line = $result->fetch_array($mode);
+        while (!is_null($line)) {
+            $ret[$i] = $line;
+            $i++;
+            $line = $result->fetch_array($mode);
+        }
+        return $ret;
+    } else {
+        $ret = [];
+        for ($i = 0; $i < $limit; $i++) {
+            $line = $result->fetch_array($mode);
+            if (is_null($line)) {
+                break;
+            }
+            $ret[$i] = $line;
+        }
+        return $ret;
+    }
+    return []; // why not xD
+}
+
+function db_get_last_inserted_id() {
+    return db_get_result(db_stmt("SELECT LAST_INSERT_ID()"))[0];
+}
+
 // https://stackoverflow.com/questions/6079492/how-to-print-a-debug-log
 function log_httpd(string $message) {
     file_put_contents('php://stderr', print_r($message, TRUE));
@@ -168,8 +202,8 @@ function pw_verify($username, $password) {
     if (is_null($hashed)) {
         return false;
     }
-    $hashed = $hashed[0];
-    log_httpd($hashed);
+    log_httpd(json_encode($hashed));
+    $hashed = $hashed["password"];
     return password_verify($password, $hashed);
 }
 

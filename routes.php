@@ -127,6 +127,8 @@ use_route("/api/demo/inspect", "routes/api/demo/inspect.php");
 exact_route("/api/admin/db_bootstrap", "routes/api/admin/db_bootstrap.php");
 exact_route("/api/user/signup", "routes/api/user/signup.php");
 exact_route("/api/user/whoami", "routes/api/user/whoami.php");
+exact_route("/api/site/create", "routes/api/site/create.php");
+exact_route("/api/site/list", "routes/api/site/list.php");
 
 // fallback
 respond_error(404, "page not found");
