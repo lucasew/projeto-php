@@ -1,5 +1,4 @@
 <?php
-
 require "vendor/autoload.php";
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -28,6 +27,35 @@ function exceptionHandler($e) {
     ]);
 }
 set_exception_handler('exceptionHandler');
+function must_getenv(string $variable): string {
+    $value = $_ENV[$variable];
+    if ($value === "") {
+        throw new Exception("environment variable $". $variable . " is empty");
+    }
+    return $value;
+}
+
+function jwt_get_key(): string {
+    $key = must_getenv("JWT_KEY");
+    return $key;
+}
+
+function jwt_encode($payload): string {
+    $key = jwt_get_key();
+    $jwt = Firebase\JWT\JWT::encode($payload, $key);
+    return $jwt;
+}
+
+function jwt_decode(string $jwt) {
+    try {
+    $key = jwt_get_key();
+    $payload = Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
+    $payloadArray = json_decode(json_encode($payload), true);
+    return $payloadArray;
+    } catch (Exception $e) { // só pra não correr o risco de vazar o secret no stacktrace
+        throw new Exception($e->getMessage());
+    }
+}
 
 $db = null;
 function getDatabase() {
@@ -35,10 +63,10 @@ function getDatabase() {
     if (!is_null($db)) {
         return $db;
     }
-    $user = getenv("DB_USER");
-    $password = getenv("DB_PASSWD");
-    $database = getenv("DB_DATABASE");
-    $host = getenv("DB_HOST");
+    $user = must_getenv("MYSQL_USER");
+    $password = must_getenv("MYSQL_PASSWORD");
+    $database = must_getenv("MYSQL_DATABASE");
+    $host = must_getenv("MYSQL_HOST");
     $db = new mysqli($host, $user, $password);
     if ($db->connect_error) {
         respond_error(500, "failed to connect to database: " . $db->connect_error);

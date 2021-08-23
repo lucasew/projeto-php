@@ -11,6 +11,12 @@ $ROUTE = parse_url($_SERVER["REQUEST_URI"])["path"];
 
 function user_get() {
     global $INPUT_DATA;
+    $jwt = $INPUT_DATA["jwt"] ?? $INPUT_DATA["authorization"] ?? null;
+    if ($jwt) {
+        $decoded = jwt_decode($jwt);
+        // log_httpd(json_encode($decoded));
+        return $decoded;
+    }
     $login_user = $INPUT_DATA["login_user"] ?? null;
     $login_password = $INPUT_DATA["login_password"] ?? null;
 
@@ -129,9 +135,11 @@ use_route("/api/demo/inspect", "routes/api/demo/inspect.php");
 exact_route("/api/admin/db_bootstrap", "routes/api/admin/db_bootstrap.php");
 exact_route("/api/admin/create", "routes/api/admin/create.php");
 exact_with_route_param("/api/admin/listall/:entity", "routes/api/admin/listall.php");
+exact_with_route_param("/api/admin/env/:variable", "routes/api/admin/env.php");
 
 // user
 exact_route("/api/user/signup", "routes/api/user/signup.php");
+exact_route("/api/user/login", "routes/api/user/login.php");
 exact_route("/api/user/whoami", "routes/api/user/whoami.php");
 exact_route("/api/user/delete", "routes/api/user/delete.php");
 
