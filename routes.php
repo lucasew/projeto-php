@@ -9,11 +9,29 @@ function is_empty_string(string $s) {
 $INPUT_DATA = array_merge_recursive($_GET, $_POST);
 $ROUTE = parse_url($_SERVER["REQUEST_URI"])["path"];
 
+$IS_LOGGED_IN = false;
+$USER = null;
+$IS_ADMIN = false;
+
+$login_user = $INPUT_DATA["login_user"];
+$login_password = $INPUT_DATA["login_password"];
+
+if (!is_null($login_user) && !is_null($login_password)) {
+    global $IS_LOGGED_IN, $USER, $IS_ADMIN;
+    if (pw_verify($login_user, $login_password)) {
+        $IS_LOGGED_IN = true;
+        $USER = $login_user;
+        $IS_ADMIN = db_get_result(db_stmt("select role from users where username = ?", "s", $USER))[0] == "ADMIN";
+    }
+}
+
+
 /**
  * bring required variables to scope then require the new file
  */
 function execphp(string $script) {
     global $INPUT_DATA, $ROUTE;
+    global $IS_LOGGED_IN, $USER, $IS_ADMIN;
     require $script;
     // doesn't pass this part
     die();
@@ -75,6 +93,7 @@ function exact_with_route_param(string $selected_route, string $handler_script) 
     $INPUT_DATA = array_merge_recursive($INPUT_DATA, $extra_params);
     execphp($handler_script);
 }
+
 
 // healthcheck
 exact_route("/healthcheck", "routes/healthcheck.php");

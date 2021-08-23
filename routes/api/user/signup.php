@@ -6,7 +6,7 @@ db_execute(db_stmt(
     "sss",
     $user,
     "USER",
-    $password
+    pw_create($password)
 ));
 respond_sucess([
     "user_id" => db_get_result(db_stmt("SELECT LAST_INSERT_ID()"))[0],

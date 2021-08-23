@@ -15,6 +15,8 @@ function errorHandler($severity, $message, $filename, $lineno) {
         ]
     ]);
 }
+set_error_handler('errorHandler');
+
 function exceptionHandler($e) {
     respond(500, [
         "exception" => [
@@ -25,7 +27,6 @@ function exceptionHandler($e) {
         ]
     ]);
 }
-set_error_handler('errorHandler');
 set_exception_handler('exceptionHandler');
 
 $db = null;
@@ -156,6 +157,19 @@ function forbid_entrypoint($__FILE__) {
 function is_client_mobile() {
     $detector = new Mobile_Detect;
     return $detector->isMobile();
+}
+
+function pw_create($password) {
+    return password_hash($password, PASSWORD_DEFAULT)
+}
+
+function pw_verify($username, $password) {
+    $hashed = db_get_result(db_stmt("select password from users where username = ?", "s", $username))
+    if (count($hashed) != 1) {
+        throw new Exception("usuário ou senha inválido");
+    }
+    $hashed = $hashed[1];
+    return password_verify($password, $hashed);
 }
 
 forbid_entrypoint(__FILE__);
