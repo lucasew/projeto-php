@@ -4,7 +4,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 header("X-Made_by: @lucasew (github.com/lucasew)");
 
-function errorHandler($severity, $message, $filename, $lineno) {
+set_error_handler(function ($severity, $message, $filename, $lineno) {
     respond(500, [
         "error" => [
             "severity" => $severity,
@@ -13,10 +13,9 @@ function errorHandler($severity, $message, $filename, $lineno) {
             "lineno" => $lineno
         ]
     ]);
-}
-set_error_handler('errorHandler');
+});
 
-function exceptionHandler($e) {
+set_exception_handler(function ($e) {
     respond(500, [
         "exception" => [
             "message" => $e->getMessage(),
@@ -25,8 +24,8 @@ function exceptionHandler($e) {
             "line" => $e->getLine()
         ]
     ]);
-}
-set_exception_handler('exceptionHandler');
+});
+
 function must_getenv(string $variable): string {
     $value = $_ENV[$variable];
     if ($value === "") {
