@@ -34,6 +34,15 @@ db_drop_and_create_table("analytics_datapoint",
 "payload TEXT" // JSON
 );
 
+// TODO: demo, arrumar dps
+db_execute(db_stmt(
+    "insert into users 
+    (username, role, password) 
+    values ('root', 'ADMIN', ?)", 
+    "s", 
+    pw_create("123")
+));
+
 respond_sucess([
     "result" => "ok"
 ]);
