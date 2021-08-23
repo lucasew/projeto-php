@@ -148,6 +148,10 @@ exact_with_route_param("/api/comment/:slug_id/list", "routes/api/comment/list-sl
 exact_with_route_param("/api/comment/:cid/delete", "routes/api/comment/delete.php");
 exact_with_route_param("/api/comment/:cid/update", "routes/api/comment/update.php");
 
+// analytics
+exact_with_route_param("/api/analytics/ping/:domain/:tag", "routes/api/analytics/ping.php");
+exact_with_route_param("/api/analytics", "routes/api/analytics/_list.php");
+
 // fallback
 respond_error(404, "page not found");
 
