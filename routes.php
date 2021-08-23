@@ -143,8 +143,10 @@ exact_with_route_param("/api/site/:domain/delete", "routes/api/site/delete.php")
 // comment
 exact_with_route_param("/api/comment/:domain/:slug/create", "routes/api/comment/create.php");
 exact_with_route_param("/api/comment/:domain/:slug/list", "routes/api/comment/list-siteslug.php");
+
 exact_with_route_param("/api/comment/:slug_id/list", "routes/api/comment/list-slugid.php");
 exact_with_route_param("/api/comment/:cid/delete", "routes/api/comment/delete.php");
+exact_with_route_param("/api/comment/:cid/update", "routes/api/comment/update.php");
 
 // fallback
 respond_error(404, "page not found");

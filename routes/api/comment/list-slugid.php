@@ -11,7 +11,7 @@ select
 from comments
 inner join users on comments.uid = users.uid
 where comments.slid = ?
-", "i", $slid));
+", "i", $slid), MYSQLI_ASSOC);
 
 respond_sucess([
     "comments" => $comments,
