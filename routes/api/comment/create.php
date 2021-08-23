@@ -14,6 +14,7 @@ select sid from sites
 where domain = ?", "s",
 $domain));
 
+log_httpd(json_encode($site_res));
 ["sid" => $sid] = $site_res;
 
 if (is_null($sid)) {

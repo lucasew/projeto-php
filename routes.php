@@ -128,6 +128,7 @@ use_route("/api/demo/inspect", "routes/api/demo/inspect.php");
 // admin
 exact_route("/api/admin/db_bootstrap", "routes/api/admin/db_bootstrap.php");
 exact_route("/api/admin/create", "routes/api/admin/create.php");
+exact_with_route_param("/api/admin/listall/:entity", "routes/api/admin/listall.php");
 
 // user
 exact_route("/api/user/signup", "routes/api/user/signup.php");
