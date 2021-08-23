@@ -99,13 +99,13 @@ function db_drop_and_create_table(string $table_name, string ...$columns) {
     . " (" . join(",", $columns) . ")"));
 }
 
-function db_get_result($stmt) {
+function db_get_result($stmt, $mode = MYSQLI_BOTH) {
     db_execute($stmt);
     $result = $stmt->get_result();
     if (!$result) {
         db_report_failure($stmt);
     }
-    return $result->fetch_array();
+    return $result->fetch_array($mode);
 }
 
 function db_get_all_result($stmt, $mode = MYSQLI_BOTH, $limit = 0) {
