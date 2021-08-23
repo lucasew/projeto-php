@@ -1,6 +1,9 @@
 <?php
-$user = $INPUT_DATA["user"];
-$password = $INPUT_DATA["password"];
+[
+    "user" => $user,
+    "password" => $password
+] = $INPUT_DATA;
+
 db_execute(db_stmt(
     "insert into users (username, role, password) values (?, ?, ?)",
     "sss",
