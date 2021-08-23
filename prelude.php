@@ -91,6 +91,7 @@ function db_execute($stmt) {
     if (!$result) {
         db_report_failure($stmt);
     }
+    return getDatabase()->affected_rows;
 }
 function db_drop_and_create_table(string $table_name, string ...$columns) {
     db_execute(db_stmt("drop table if exists " . $table_name));
@@ -202,7 +203,7 @@ function pw_verify($username, $password) {
     if (is_null($hashed)) {
         return false;
     }
-    log_httpd(json_encode($hashed));
+    // log_httpd(json_encode($hashed));
     $hashed = $hashed["password"];
     return password_verify($password, $hashed);
 }

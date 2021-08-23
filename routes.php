@@ -137,6 +137,7 @@ exact_route("/api/user/delete", "routes/api/user/delete.php");
 exact_route("/api/site/create", "routes/api/site/create.php");
 exact_route("/api/site/list", "routes/api/site/list.php");
 exact_with_route_param("/api/site/:domain/get", "routes/api/site/has.php");
+exact_with_route_param("/api/site/:domain/delete", "routes/api/site/delete.php");
 
 // fallback
 respond_error(404, "page not found");
