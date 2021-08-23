@@ -153,6 +153,8 @@ exact_with_route_param("/api/comment/:cid/update", "routes/api/comment/update.ph
 exact_with_route_param("/api/analytics/ping/:domain/:tag", "routes/api/analytics/ping.php");
 exact_with_route_param("/api/analytics", "routes/api/analytics/_list.php");
 
+// assets
+exact_route("/commentsection.js", "routes/assets/commentsection.js");
 // fallback
 respond_error(404, "page not found");
 

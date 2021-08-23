@@ -23,3 +23,23 @@ $stmt->execute();
 $result = $stmt->get_result();
 var_dump($result);
 ?>
+
+<script type="text/javascript" src="/commentsection.js?slug=eoq"></script>
+<style>
+.comment-section {
+    display: flex;
+    max-width: 500px;
+    flex-direction: column;
+    margin: auto;
+}
+.comment-section p {
+    margin: 0;
+}
+.commment-section > button {
+    width: 100%;
+}
+.comment-section-comment-username {
+    font-weight: bold;
+    padding-right: 10px;
+}
+</style>
