@@ -48,9 +48,19 @@ function getDatabase() {
     return $db;
 }
 
-function db_report_failure() {
+function db_report_failure($stmt = null) {
     $db = getDatabase();
-    throw new Exception("MySQL statement failure: " . $db->errno . " " . $db->error);
+    $use_stmt = !is_null($stmt);
+    $errno = $use_stmt ? $stmt->errno : $db->errno;
+    $error = $use_stmt ? $stmt->error : $db->error;
+    if ($errno == 0) { // nada errado aqui
+        return;
+    }
+    if ($use_stmt) {
+        throw new Exception("MySQL statement failure: " . $errno . " " . $error);
+    } else {
+        throw new Exception("MySQL database failure: " . $errno . " " . $error);
+    }
 }
 
 /**
@@ -66,7 +76,7 @@ function db_stmt(string $query, string $types = "", string ...$placeholders) {
         db_report_failure();
     }
     if ($types != "") {
-        $db->bind_param($types, ...$placeholders);
+        $stmt->bind_param($types, ...$placeholders);
     }
     return $stmt;
 }
@@ -78,13 +88,23 @@ function db_run(string $query) {
 function db_execute($stmt) {
     $result = $stmt->execute();
     if (!$result) {
-        db_report_failure();
+        db_report_failure($stmt);
     }
+}
+function db_drop_and_create_table(string $table_name, string ...$columns) {
+    db_execute(db_stmt("drop table if exists " . $table_name));
+    return db_execute(db_stmt("create table " 
+    . $table_name 
+    . " (" . join(",", $columns) . ")"));
 }
 
 function db_get_result($stmt) {
     db_execute($stmt);
-    return $stmt->get_result()->fetch_array();
+    $result = $stmt->get_result();
+    if (!$result) {
+        db_report_failure($stmt);
+    }
+    return $result->fetch_array();
 }
 
 // https://stackoverflow.com/questions/6079492/how-to-print-a-debug-log
@@ -100,7 +120,9 @@ function respond(int $status_code, array $data) {
 }
 
 function respond_sucess(array $data) {
-    respond(200, $data);
+    respond(200, [
+        "result" => $data
+    ]);
 }
 
 function respond_error(int $status_code, string $message) {
@@ -129,6 +151,11 @@ function forbid_entrypoint($__FILE__) {
     if (is_entrypoint($__FILE__)) {
         respond_error(400, "invalid route");
     }
+}
+
+function is_client_mobile() {
+    $detector = new Mobile_Detect;
+    return $detector->isMobile();
 }
 
 forbid_entrypoint(__FILE__);

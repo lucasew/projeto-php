@@ -55,8 +55,8 @@ function exact_with_route_param(string $selected_route, string $handler_script) 
     };
     $params_parts = $preprocess($selected_route);
     $route_parts = $preprocess($ROUTE);
-    log_httpd(json_encode($params_parts));
-    log_httpd(json_encode($route_parts));
+    // log_httpd(json_encode($params_parts));
+    // log_httpd(json_encode($route_parts));
 
     $extra_params = [];
     if (count($params_parts) == count($route_parts)) {
@@ -80,10 +80,14 @@ function exact_with_route_param(string $selected_route, string $handler_script) 
 exact_route("/healthcheck", "routes/healthcheck.php");
 
 // demos
-exact_with_route_param("/demo/say/:word/", "routes/demo/say.php");
-exact_with_route_param("/demo/say/:word/wednesday", "routes/demo/say.php");
-exact_route("/demo/db", "routes/demo/db.php");
-use_route("/demo/inspect", "routes/demo/inspect.php");
+exact_with_route_param("/api/demo/say/:word/", "routes/api/demo/say.php");
+exact_with_route_param("/api/demo/say/:word/wednesday", "routes/api/demo/say.php");
+exact_route("/api/demo/db", "routes/api/demo/db.php");
+use_route("/api/demo/inspect", "routes/api/demo/inspect.php");
+
+// business logic
+exact_route("/api/admin/db_bootstrap", "routes/api/admin/db_bootstrap.php");
+exact_route("/api/user/signup", "routes/api/user/signup.php");
 
 // fallback
 respond_error(404, "page not found");

@@ -7,5 +7,6 @@ getDatabase();
 respond_sucess([
     "message" => "tudo certo, patrão",
     "tables" => db_get_result(db_stmt("show full tables")),
+    "isMobile" => is_client_mobile()
 ]);
 ?>
