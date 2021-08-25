@@ -41,7 +41,7 @@ header("Content-Type: text/javascript");
     }
     function wrappedFetch(url, options, ...args) {
         const resolvedURL = `http://${webserver}/${url}`
-        console.log(resolvedURL)
+        // console.log(resolvedURL)
         return fetch(resolvedURL, options, ...args)
     }
     function arrayify(value) {
