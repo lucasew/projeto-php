@@ -7,14 +7,9 @@
     const defaultTag = scriptUrl.searchParams.get("defaultTag") || "generic";
     const host = scriptUrl.searchParams.get("host") || window.location.host;
     window.emitAnalyticsEvent = (tag, payload) => {
-        const event = new CustomEvent(eventKey, {tag, payload})
-        currentScript.dispatchEvent(event)
-    }
-    currentScript.addEventListener(eventKey, ({tag, payload}) => {
-        console.log(payload) // FIXME: payyload n tá mandando
         callApi(`api/analytics/ping/${host}/${tag || defaultTag}`, {}, {
             method: 'post',
             body: JSON.stringify(payload)
         })
-    })
+    }
 })(document.currentScript)

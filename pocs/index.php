@@ -1,29 +1,5 @@
-<?php
-function show($item) {
-    echo "<p>";
-    echo $item;
-    echo "</p>";
-}
-?>
-<?php
-include "./setup.php";
-?>
-<h1>Hello, world</h1>
-<?php
-show("Nhaa");
-show(var_dump (2));
-
-show(var_dump($db));
-
-show(2+2);
-show(phpversion());
-
-$stmt = $db->prepare("show tables");
-$stmt->execute();
-$result = $stmt->get_result();
-var_dump($result);
-?>
-
+<title>Teste</title>
+<h1>Página de teste</h1>
 <script type="text/javascript" src="/commentsection.js?host=localhost&slug=eoq"></script>
 <script type="text/javascript" src="/analytics.js?host=localhost&defaultTag=generico"></script>
 <style>

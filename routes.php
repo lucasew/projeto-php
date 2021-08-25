@@ -168,6 +168,7 @@ exact_with_route_param("/api/slug/:slid/delete", "routes/api/slug/delete.php");
 // analytics
 exact_with_route_param("/api/analytics/ping/:domain/:tag", "routes/api/analytics/ping.php");
 exact_with_route_param("/api/analytics", "routes/api/analytics/_list.php");
+exact_with_route_param("/api/analytics/:domain", "routes/api/analytics/by-site.php");
 
 // assets
 exact_route("/commentsection.js", "routes/assets/commentsection.js");
