@@ -1,7 +1,7 @@
 <title>Teste</title>
 <h1>Página de teste</h1>
 <script type="text/javascript" src="/commentsection.js?host=localhost&slug=eoq"></script>
-<script type="text/javascript" src="/analytics.js?host=localhost&defaultTag=generico"></script>
+<script type="text/javascript" src="/analytics.js?host=localhost&defaultTag=generico&enablePerformancePacket=1"></script>
 <style>
 .comment-section {
     display: flex;
