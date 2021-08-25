@@ -11,7 +11,9 @@
         currentScript.dispatchEvent(event)
     }
     currentScript.addEventListener(eventKey, ({tag, payload}) => {
+        console.log(payload) // FIXME: payyload n tá mandando
         callApi(`api/analytics/ping/${host}/${tag || defaultTag}`, {}, {
+            method: 'post',
             body: JSON.stringify(payload)
         })
     })
