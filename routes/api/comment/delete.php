@@ -16,7 +16,7 @@ if ($is_admin) {
     where 
         cid = ?
         and uid = ?
-    ", "i", $cid, $uid));
+    ", "ii", $cid, $uid));
     respond_sucess([
         "cid" => $cid,
         "modified" => $affected > 0

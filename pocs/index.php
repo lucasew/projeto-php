@@ -32,14 +32,41 @@ var_dump($result);
     flex-direction: column;
     margin: auto;
 }
-.comment-section p {
-    margin: 0;
+
+.comment-section-comments {
+    list-style-type: none;
 }
-.commment-section > button {
-    width: 100%;
-}
-.comment-section-comment-username {
+.comment-section-comment-user {
     font-weight: bold;
-    padding-right: 10px;
+    padding-right: 5px;
+}
+
+.comment-section-bottom {
+    width: 100%;
+    display: flex;
+}
+.comment-section-bottom-logged input {
+    flex: 1;
+}
+
+.comment-section-bottom-unlogged * {
+    flex: 1;
+}
+.comment-section-comment-body {
+    flex: 1;
+}
+.comment-section-comment {
+    display: flex;
+}
+.comment-section-comment-button {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+}
+.comment-section-comment-button-update {
+    background-color: blue;
+}
+.comment-section-comment-button-delete {
+    background-color: red;
 }
 </style>
