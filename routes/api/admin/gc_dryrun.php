@@ -1,22 +1,22 @@
 <?php
 user_must_admin();
 
-$sites = db_execute(db_stmt("
-delete from sites
+$sites = db_get_all_result(db_stmt("
+select domain from sites
 where 
     owner not in 
         (select uid from users)
 "));
 
-$slugs = db_execute(db_stmt("
-delete from slug
+$slugs = db_get_all_result(db_stmt("
+select slid from slug
 where
     sid not in
         (select sid from sites)
 "));
 
-$comments = db_execute(db_stmt("
-delete from comments
+$comments = db_get_all_result(db_stmt("
+select cid from comments
 where
     slid not in
         (select slid from slug)
@@ -24,8 +24,8 @@ where
         (select uid from users)
 "));
 
-$analytics = db_execute(db_stmt("
-delete from analytics_datapoint
+$analytics = db_get_all_result(db_stmt("
+select sid from analytics_datapoint
 where
     uid not in 
         (select uid from users)

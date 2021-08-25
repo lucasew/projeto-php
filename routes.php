@@ -137,6 +137,7 @@ exact_route("/api/admin/create", "routes/api/admin/create.php");
 exact_with_route_param("/api/admin/listall/:entity", "routes/api/admin/listall.php");
 exact_with_route_param("/api/admin/env/:variable", "routes/api/admin/env.php");
 exact_with_route_param("/api/admin/gc", "routes/api/admin/gc.php");
+exact_with_route_param("/api/admin/gc_dryrun", "routes/api/admin/gc_dryrun.php");
 
 // user
 exact_route("/api/user/signup", "routes/api/user/signup.php");
@@ -171,6 +172,7 @@ exact_with_route_param("/api/analytics", "routes/api/analytics/_list.php");
 // assets
 exact_route("/commentsection.js", "routes/assets/commentsection.js");
 exact_route("/utils.js", "routes/assets/utils.js");
+exact_route("/analytics.js", "routes/assets/analytics.js");
 // fallback
 respond_error(404, "page not found");
 

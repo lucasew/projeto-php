@@ -25,6 +25,7 @@ var_dump($result);
 ?>
 
 <script type="text/javascript" src="/commentsection.js?host=localhost&slug=eoq"></script>
+<script type="text/javascript" src="/analytics.js?host=localhost&defaultTag=generico"></script>
 <style>
 .comment-section {
     display: flex;

@@ -13,7 +13,7 @@ function getLoginToken() {
 function isLoggedIn() {
     return !!getLoginToken()
 }
-async function callApi(url, params = {}) {
+async function callApi(url, params = {}, options = {}) {
     try {
         let queryParams = { ...params }
         if (isLoggedIn()) {
@@ -21,7 +21,7 @@ async function callApi(url, params = {}) {
         }
         // console.log(queryParams)
         const queryParamsStr = new URLSearchParams(queryParams);
-        const res = await wrappedFetch(`${url}?${queryParamsStr}`)
+        const res = await wrappedFetch(`${url}?${queryParamsStr}`, options)
         return res
     } catch (e) {
         console.error(e)
