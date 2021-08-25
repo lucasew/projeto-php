@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHPUtils</title>
+    <style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+    }
+
+    #header {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    #content {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .authentication-button {
+        padding: 10px;
+        width: 100px;
+        margin: 5px;
+    }
+    .site-list-site {
+        display: flex;
+        flex: 0 1;
+        flex-direction: column;
+    }
+    .site-list-site-header {
+        display: flex;
+        justify-content: space-between;
+        flex: 0 1;
+        min-width: 200px;
+    }
+    .site-list-site-header a {
+        margin: 0;
+    }
+    .site-list-site-body {
+        display: flex;
+        list-style-type: none;
+        flex-direction: column;
+        margin: 0;
+    }
+    .site-list-site-body li {
+        display: flex;
+        justify-content: space-between;
+    }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>Projeto PHP - Dashboard</h1>
+    </div>
+    <div id="content">
+        <h1>Demo</h1>
+    </div>
+    <script type="text/javascript" src="/utils.js"></script>
+    <script>
+    async function handleDeleteRouteResult(response) {
+        try {
+            const res = await Promise.resolve(response) // se não for promise agora é, se for continua sendo
+            const json = await res.json()
+            const modified = json.response.modified
+            if (modified && res.ok) {
+                alert("Item deletado com sucesso!")
+            } else {
+                alert("Nenhum item encontrado para deletar ou você não tem permissão para tal ação.")
+            }
+        } catch (e) {
+            alert("Falhou na exclusão. O console tem mais detalhes.")
+            console.error(e)
+        }
+
+    }
+    async function handleDeleteSite(domain) {
+        if (confirm(`Deletar site '${domain}'?`)) {
+            await handleDeleteRouteResult(callApi(`api/site/${domain}/delete`))
+        }
+    }
+    async function handleDeleteSlug(slugObject) {
+        const {slug, slid} = slugObject
+        if (confirm(`Deletar slug '${slug}'?`)) {
+            await handleDeleteRouteResult(callApi(`api/slug/${slid}/delete`))
+        }
+    }
+    async function rerender() {
+        const AuthenticationButton = ({text, onClick}) => {
+            const e = createElement({
+                type: "button",
+                children: text,
+                classList: "authentication-button"
+            })
+            e.addEventListener('click', onClick)
+            return e
+        }
+        const SiteSection = ({domain, sid, created_at, slugs}) => {
+            return createElement({
+                type: "section",
+                classList: "site-list-site",
+                children: [
+                    createElement({
+                        type: "div",
+                        classList: "site-list-site-header",
+                        children: [
+                            createElement({
+                                type: "a",
+                                href: `http://${domain}`,
+                                children: domain
+                            }),
+                            createElement({
+                                type: "button",
+                                children: "X",
+                                title: "Apagar domínio",
+                                creationHook(e) {
+                                    e.addEventListener('click', () => {
+                                        handleDeleteSite(domain)
+                                        .finally(rerender)
+                                    })
+                                }
+                            })
+                        ]
+                    }),
+                    createElement({
+                        type: 'ul',
+                        classList: 'site-list-site-body',
+                        children: slugs.map((slugObject) => {
+                            const {slid, slug} = slugObject
+                            return createElement({
+                                type: 'li',
+                                children: [
+                                    createElement({
+                                        type: 'span',
+                                        children: slug
+                                    }),
+                                    createElement({
+                                        type: 'button',
+                                        children: 'X',
+                                        title: "Apagar slug",
+                                        creationHook(e) {
+                                            e.addEventListener('click', () => {
+                                                handleDeleteSlug(slugObject)
+                                                .finally(rerender)
+                                            })
+                                        }
+                                    })
+                                ]
+                            })
+                        })
+                    })
+                ]
+            })
+        }
+        const LoginButton = AuthenticationButton({text: "Login", onClick: () => handleLogin(rerender)})
+        const CadastroButton = AuthenticationButton({text: "Cadastro", onClick: () => handleCadastro(rerender)})
+        const LogoutButton = AuthenticationButton({text: "Sair", onClick: () => handleLogout(rerender)})
+        if (!isLoggedIn()) {
+            document.getElementById("content").replaceChildren(LoginButton, CadastroButton)
+        } else {
+            let siteList = await jsonCallApi("api/site/list");
+            siteList = siteList.result.sites
+            let slugList = await jsonCallApi("api/site/slugs");
+            slugList = slugList.result.slugs
+            document.getElementById("content").replaceChildren(...[
+                ...siteList.map((site) => {
+                    const {domain, sid, created_at} = site
+                    const slugs = slugList[domain]
+                    return SiteSection({domain, sid, created_at, slugs})
+                })
+                , LogoutButton
+            ])
+        }
+    }
+    rerender()
+    </script>
+</body>
+</html>
