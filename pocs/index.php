@@ -73,4 +73,8 @@ var_dump($result);
     font-weight: bold;
     padding-right: 5px;
 }
+
+.comment-section-error {
+    margin: auto;
+}
 </style>
