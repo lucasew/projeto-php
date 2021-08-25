@@ -148,6 +148,8 @@ exact_route("/api/site/create", "routes/api/site/create.php");
 exact_route("/api/site/list", "routes/api/site/list.php");
 exact_with_route_param("/api/site/:domain/get", "routes/api/site/has.php");
 exact_with_route_param("/api/site/:domain/delete", "routes/api/site/delete.php");
+exact_with_route_param("/api/site/:domain/slugs", "routes/api/site/slugs/list-by-domain.php");
+exact_with_route_param("/api/site/slugs", "routes/api/site/slugs/list.php");
 
 // comment
 exact_with_route_param("/api/comment/:domain/:slug/create", "routes/api/comment/create.php");
