@@ -12,7 +12,7 @@ $domain));
 ["sid" => $sid] = $site_res;
 
 if (is_null($sid)) {
-    respond_error(404, "site not found");
+    respond_error(400, "site not found");
 }
 
 $slid = db_get_result(db_stmt("

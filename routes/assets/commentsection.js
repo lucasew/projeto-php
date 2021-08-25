@@ -23,9 +23,10 @@ header("Content-Type: text/javascript");
     )
     async function rerender() {
         const comments = await callApi(`api/comment/${host}/${slug}/list`)
-        if (!comments.ok) {
+        if (!comments.ok && comments.status != 404) {
             const error = {
-                404: "Site não cadastrado",
+                400: "Site não cadastrado",
+                404: "Post não cadastrado",
                 500: "Erro de servidor"
             }[comments.status]
             theNode.replaceChildren(
@@ -46,14 +47,14 @@ header("Content-Type: text/javascript");
             )
             return
         }
-        const commentsJson = await comments.json();
+        commentsJson = comments.status == 404 ? [] : (await comments.json()).result.comments  
         const user = whoami()
         theNode.replaceChildren(
             createElement({
                 type: "ul",
                 classList: "comment-section-comments",
                 id: "comment-section-comments",
-                children: commentsJson.result.comments.map((comment) => {
+                children: commentsJson.map((comment) => {
                     const { username, body, cid } = comment
                     return createElement({
                         type: "li",
@@ -85,6 +86,9 @@ header("Content-Type: text/javascript");
                                     creationHook(e) {
                                         e.style.cursor = "pointer"
                                         e.addEventListener('click', () => {
+                                            if (!confirm("Você tem certeza?")) {
+                                                return
+                                            }
                                             promiseHandler(callApi(`api/comment/${cid}/delete`)
                                                 .then((res) => res.ok && alert("Comentário deletado com sucesso!"))
                                                 .then(rerender))

@@ -136,6 +136,7 @@ exact_route("/api/admin/db_bootstrap", "routes/api/admin/db_bootstrap.php");
 exact_route("/api/admin/create", "routes/api/admin/create.php");
 exact_with_route_param("/api/admin/listall/:entity", "routes/api/admin/listall.php");
 exact_with_route_param("/api/admin/env/:variable", "routes/api/admin/env.php");
+exact_with_route_param("/api/admin/gc", "routes/api/admin/gc.php");
 
 // user
 exact_route("/api/user/signup", "routes/api/user/signup.php");
