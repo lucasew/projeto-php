@@ -9,7 +9,8 @@ header("Content-Type: text/javascript");
     const scriptUrl = new URL(currentScript.src);
     const webserver = '<?php echo $_SERVER["SERVER_NAME"] ?>';
     const slug = scriptUrl.searchParams.get("slug");
-    const host = window.location.host;
+    const host = scriptUrl.searchParams.get("host") || window.location.host;
+    console.log(host)
 
     function promiseHandler(promise) {
         return promise.catch((e) => {
@@ -94,6 +95,29 @@ header("Content-Type: text/javascript");
     )
     async function rerender() {
         const comments = await callApi(`api/comment/${host}/${slug}/list`)
+        if (!comments.ok) {
+            const error = {
+                404: "Site não cadastrado",
+                500: "Erro de servidor"
+            }[comments.status]
+            theNode.replaceChildren(
+                createElement({
+                    type: "p",
+                    classList: "comment-section-error",
+                    children: [
+                        createElement({
+                            type: "span",
+                            children: "ERRO"
+                        }),
+                        createElement({
+                            type: "span",
+                            children: error || comments.statusText
+                        })
+                    ]
+                })
+            )
+            return
+        }
         const commentsJson = await comments.json();
         const user = whoami()
         theNode.replaceChildren(

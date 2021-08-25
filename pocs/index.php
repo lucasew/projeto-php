@@ -24,7 +24,7 @@ $result = $stmt->get_result();
 var_dump($result);
 ?>
 
-<script type="text/javascript" src="/commentsection.js?slug=eoq"></script>
+<script type="text/javascript" src="/commentsection.js?host=vasp.com&slug=eoq"></script>
 <style>
 .comment-section {
     display: flex;
@@ -68,5 +68,9 @@ var_dump($result);
 }
 .comment-section-comment-button-delete {
     background-color: red;
+}
+.comment-section-error > :first-child {
+    font-weight: bold;
+    padding-right: 5px;
 }
 </style>
