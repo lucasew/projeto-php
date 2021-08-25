@@ -13,6 +13,7 @@
         width: 100vw;
         margin: 0;
         padding: 0;
+        align-items: center;
     }
 
     #header {
@@ -20,28 +21,33 @@
         align-items: center;
         flex-direction: column;
     }
+    #header h1 {
+        margin-bottom: 0;
+    }
     #content {
         display: flex;
         flex: 1;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        min-width: min(80vw, 600px);
     }
     .authentication-button {
         padding: 10px;
-        width: 100px;
+        width: 100%;
         margin: 5px;
     }
     .site-list-site {
         display: flex;
         flex: 0 1;
         flex-direction: column;
+        width: 100%;
     }
     .site-list-site-header {
         display: flex;
         justify-content: space-between;
         flex: 0 1;
-        min-width: 200px;
+        width: 100%;
     }
     .site-list-site-header a {
         margin: 0;
@@ -61,17 +67,34 @@
 <body>
     <div id="header">
         <h1>Projeto PHP - Dashboard</h1>
+        <p id="authstring">não checado</p>
     </div>
     <div id="content">
         <h1>Demo</h1>
     </div>
     <script type="text/javascript" src="/utils.js"></script>
     <script>
+        (function () {
+            const header = document.getElementById("header")
+            header.addEventListener('click', () => {
+                const me = whoami()
+                if (me) {
+                    const {username, uid, is_admin} = me
+                    alert(`Logado como '${username}' (${uid})\nVocê ${!is_admin ? "não" : "" } é um administrador!`)
+                } else {
+                    alert("Você não está logado")
+                }
+            })
+            header.style.cursor = "pointer"
+            header.title = "Ver situação de login"
+        })()
+        
     async function handleDeleteRouteResult(response) {
         try {
             const res = await Promise.resolve(response) // se não for promise agora é, se for continua sendo
             const json = await res.json()
-            const modified = json.response.modified
+            console.log(json)
+            const modified = json.result.modified
             if (modified && res.ok) {
                 alert("Item deletado com sucesso!")
             } else {
@@ -94,7 +117,41 @@
             await handleDeleteRouteResult(callApi(`api/slug/${slid}/delete`))
         }
     }
+    async function handleAdicionarSite(callback) {
+        const domain = prompt("Qual o domínio do site?")
+        if (!domain) {
+            return
+        }
+        const res = await callApi("api/site/create", {
+            domain
+        });
+        if (res.ok) {
+            alert("Site criado com sucesso")
+            callback && callback()
+        }
+    }
+    async function handleDeletarConta(callback) {
+        const messages = [
+            "Você tem certeza que deseja deletar sua conta?",
+            "Ela vai ser deletada para sempre, ok?",
+            "Certeza absoluta?"
+        ]
+        for (let i = 0; i < messages.length; i++) {
+            const message = messages[i]
+            const query = confirm(message)
+            if (!query) {
+                return
+            }
+        }
+        await handleDeleteRouteResult(callApi("api/user/delete"));
+        handleLogout()
+        callback && callback()
+    }
     async function rerender() {
+        const me = whoami()
+        document.getElementById("authstring").innerText = me 
+            ? `'${me.username}' (${me.uid}) adm:${me.is_admin ? "sim" : "não"}`
+            : "não logado"
         const AuthenticationButton = ({text, onClick}) => {
             const e = createElement({
                 type: "button",
@@ -164,6 +221,8 @@
         const LoginButton = AuthenticationButton({text: "Login", onClick: () => handleLogin(rerender)})
         const CadastroButton = AuthenticationButton({text: "Cadastro", onClick: () => handleCadastro(rerender)})
         const LogoutButton = AuthenticationButton({text: "Sair", onClick: () => handleLogout(rerender)})
+        const AdicionarSiteButton = AuthenticationButton({text: "Adicionar Site", onClick: () => handleAdicionarSite(rerender)})
+        const DeletarContaButton = AuthenticationButton({text: "Deletar minha conta", onClick: () => handleDeletarConta(rerender)})
         if (!isLoggedIn()) {
             document.getElementById("content").replaceChildren(LoginButton, CadastroButton)
         } else {
@@ -177,7 +236,7 @@
                     const slugs = slugList[domain]
                     return SiteSection({domain, sid, created_at, slugs})
                 })
-                , LogoutButton
+                , AdicionarSiteButton, LogoutButton, DeletarContaButton
             ])
         }
     }

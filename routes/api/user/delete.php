@@ -1,11 +1,14 @@
 <?php
-$user = user_must_authenticated();
+["uid" => $uid] = user_must_authenticated();
 
-db_execute(db_stmt(
+$affected = db_execute(db_stmt(
     "delete from users where uid=?",
     "i",
-    $user["uid"]
+    $uid
 ));
 
-respond_sucess(["status" => "ok"]);
+respond_sucess([
+    "status" => "ok",
+    "modified" => $affected > 0
+]);
 ?>
