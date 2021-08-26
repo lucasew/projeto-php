@@ -10,6 +10,19 @@ Começou como um projeto da faculdade, mas que eu acabei me empolgando um pouco 
 
 # Como utilizar
 
+## Como funciona essa tipagem nos valores
+
+- Essas tipagens dos valores que você vai ver são todas no formato `nome:tipo`
+- Tipos podem ser compostos, assim como funções.
+- Tipos básicos
+  - `string`: Texto
+  - `int`: Numero inteiro
+  - `required(T)`: Implica que o tipo `T` tem que ser obrigatoriamente especificado ou vai dar pau
+  - `enum(A,B)`: Implica que o valor pode ser ou `A` ou `B`.
+  - `or(T,v)`: Implica que o valor de tipo `T` é opcional de ser especificado e se não for especificado é `v`
+- Valores que terminam com `id` como `cid` e `uid` implica tipo `int` 
+- Pedaços de rota que começam com :, como `/api/entidade/:isso/list`, implicam strings simplificadas, ou seja, apenas caracteres alfanuméricos, numeros e -. Talvez funciona outros caracteres mas mexer com escape codes é um saco então evite.
+
 ## Autenticação
 
 Existem basicamente dois jeitos de autenticar uma requisição
