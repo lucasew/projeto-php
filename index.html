@@ -228,7 +228,7 @@
         } else {
             let siteList = await jsonCallApi("api/site/list");
             siteList = siteList.result.sites
-            let slugList = await jsonCallApi("api/site/slugs");
+            let slugList = await jsonCallApi("api/slug/list");
             slugList = slugList.result.slugs
             document.getElementById("content").replaceChildren(...[
                 ...siteList.map((site) => {
