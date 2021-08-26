@@ -129,8 +129,6 @@ exact_with_route_param("/api/demo/say/:word/wednesday", "routes/api/demo/say.php
 exact_route("/api/demo/db", "routes/api/demo/db.php");
 use_route("/api/demo/inspect", "routes/api/demo/inspect.php");
 
-// business logic
-
 // admin
 exact_route("/api/admin/db_bootstrap", "routes/api/admin/db_bootstrap.php");
 exact_route("/api/admin/create", "routes/api/admin/create.php");
@@ -150,20 +148,18 @@ exact_route("/api/site/create", "routes/api/site/create.php");
 exact_route("/api/site/list", "routes/api/site/list.php");
 exact_with_route_param("/api/site/:domain/get", "routes/api/site/has.php");
 exact_with_route_param("/api/site/:domain/delete", "routes/api/site/delete.php");
-exact_with_route_param("/api/site/:domain/slugs", "routes/api/slug/list-by-domain.php");
-exact_with_route_param("/api/site/slugs", "routes/api/slug/list.php");
-exact_with_route_param("/api/slug/:slug/delete", "routes/api/slug/list.php");
 
 // comment
 exact_with_route_param("/api/comment/:domain/:slug/create", "routes/api/comment/create.php");
 exact_with_route_param("/api/comment/:domain/:slug/list", "routes/api/comment/list-siteslug.php");
-
 exact_with_route_param("/api/comment/:slug_id/list", "routes/api/comment/list-slugid.php");
 exact_with_route_param("/api/comment/:cid/delete", "routes/api/comment/delete.php");
 exact_with_route_param("/api/comment/:cid/update", "routes/api/comment/update.php");
 
 // slug
 exact_with_route_param("/api/slug/:slid/delete", "routes/api/slug/delete.php");
+exact_with_route_param("/api/slug/list", "routes/api/slug/list.php");
+exact_with_route_param("/api/slug/:domain/list", "routes/api/slug/list-by-domain.php");
 
 // analytics
 exact_with_route_param("/api/analytics/ping/:domain/:tag", "routes/api/analytics/ping.php");

@@ -6,8 +6,8 @@
     const defaultTag = scriptUrl.searchParams.get("defaultTag") || "generic";
     const host = scriptUrl.searchParams.get("host") || window.location.host;
     const enablePerformancePacket = scriptUrl.searchParams.get("enablePerformancePacket")
-    window.emitAnalyticsEvent = (tag, payload) => {
-        callApi(`api/analytics/ping/${host}/${tag || defaultTag}`, {}, {
+    window.emitAnalyticsEvent = (tag = defaultTag, payload) => {
+        callApi(`api/analytics/ping/${host}/${tag}`, {}, {
             method: 'post',
             body: JSON.stringify(payload)
         })
