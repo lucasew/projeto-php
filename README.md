@@ -200,4 +200,3 @@ Eu sou time PHP estruturado. Só tem chamada de classe nessa aplicação porque 
 
 - Um backend GraphQL quase automático?
 - Quem sabe hihihi
-
