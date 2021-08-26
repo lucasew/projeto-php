@@ -166,9 +166,10 @@ Métricas enviadas por um script cliente utilizadas para análise futura
 - `/api/analytics/:domain`: Mostra os pontos de dados de um domínio do usuário atual
   - `AUTHENTICATED`
 
-### Scripts utilitários
+## Scripts utilitários
 
-- `/commentsection.js`: Caixa de comentários que pode ser adicionada no seu site. 
+### `/commentsection.js`
+Caixa de comentários que pode ser adicionada no seu site. 
   - Ele renderiza a caixa de comentários abaixo da tag script.
   - A estilização é por sua conta. 
     - Os elementos tem classes que podem ser estilizadas usando o CSS da sua página. 
@@ -178,9 +179,13 @@ Métricas enviadas por um script cliente utilizadas para análise futura
       - Se você usa um Hugo da vida e consegue se desenrolar com o template tu tira isso de letra.
       - No caso do Hugo para normalizar o nome do caminho eu recomendo o uso do [urlize](https://gohugo.io/functions/urlize/).
     - `host:string`: Por padrão é o `window.location.host`. Você pode deixar sem especificar mas se você usa vercel e gosta de testar nos URLs de preview eu recomendo usar para não ter dor de cabeça a toa.
-- `/utils.js`: Coisas comuns usadas em outros scripts e no dashboard simplificado que foi feito para coisas que é um tanto tenso de fazer numa caixa de comentários, como criar e apagar sites, apagar a conta, cadastrar e ter a opção de apagar slugs.
+
+### `/utils.js`
+Coisas comuns usadas em outros scripts e no dashboard simplificado que foi feito para coisas que é um tanto tenso de fazer numa caixa de comentários, como criar e apagar sites, apagar a conta, cadastrar e ter a opção de apagar slugs.
   - Não é uma boa usar externamente mas eu não to impedindo ninguém.
-- `/analytics.js`: Script que fornece as primitivas necessárias para analytics usando essa aplicação. Puxando da aplicação PHP ele já desenrola de achar o servidor da API.
+
+### `/analytics.js`
+Script que fornece as primitivas necessárias para analytics usando essa aplicação. Puxando da aplicação PHP ele já desenrola de achar o servidor da API.
   - Este script define uma função chamada emitAnalyticsEvent que envia um ponto de dados usando a API. Por padrão esse script não manda nada nunca. É o seu código que aciona a função que faz o script fazer alguma coisa.
   - O script possui algumas opções passadas usando query params na tag script.
     - `defaultTag:or(string,"generic")`: Tag padrão para envio de métricas se a tag do ponto de dados não for definida. O padrão é `generic`
