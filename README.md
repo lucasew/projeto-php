@@ -4,6 +4,9 @@
 - Scripts de comentários e analytics se comunicam com a aplicação usando a API
 - A API sempre retorna JSON
 
+<!--ts-->
+<!--te-->
+
 # Motivação
 
 Começou como um projeto da faculdade, mas que eu acabei me empolgando um pouco hehehe
