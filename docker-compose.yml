@@ -1,5 +1,5 @@
 web:
-    image: webdevops/php-apache:7.4
+    image: webdevops/php-apache:8.4
     ports:
     - "80:80"
     links:
