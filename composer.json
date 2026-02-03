@@ -1,7 +1,7 @@
 {
     "require": {
         "vlucas/phpdotenv": "^5.3",
-        "mobiledetect/mobiledetectlib": "^3.0",
+        "mobiledetect/mobiledetectlib": "^4.0",
         "firebase/php-jwt": "^6.0"
     }
 }
