@@ -1,5 +1,5 @@
 web:
-    image: webdevops/php-apache:8.4@sha256:aba9ea5a3bd85b133f0ca63c7ff1a38ca01ef464929944b69818217d96935036
+    image: webdevops/php-apache:8.4@sha256:aed0e43640ba444909ade25012f9c34a36c6f45da5f54b6885d9834a2626edfc
     ports:
     - "80:80"
     links:
